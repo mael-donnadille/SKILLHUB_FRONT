@@ -6,7 +6,7 @@ import { User, LogOut, Menu, X } from 'lucide-react';
 
 export default function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const isConnected = true;
+    const isConnected = false;
 
     const toggleMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
