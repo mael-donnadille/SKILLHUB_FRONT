@@ -2,7 +2,7 @@ import { Search, MapPin, Calendar, Users } from "lucide-react";
 
 export default function HeroSection() {
     return (
-        <section className="relative pt-20 pb-28 overflow-hidden bg-background">
+        <section className="relative pt-20 pb-28 overflow-hidden bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                 <div className="text-center max-w-4xl mx-auto">
                     <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-primary font-medium text-sm mb-6 border border-blue-100">

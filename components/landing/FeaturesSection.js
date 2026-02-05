@@ -15,7 +15,7 @@ export default function FeaturesSection() {
                     <div className="hidden md:block absolute top-12 left-1/6 right-1/6 h-0.5 bg-slate-200 -z-10"></div>
 
                     {STEPS.map((step, index) => (
-                        <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center relative">
+                        <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center relative">
                             <div className="w-16 h-16 mx-auto bg-blue-50 text-primary rounded-2xl flex items-center justify-center mb-6 text-xl font-bold">
                                 <step.icon size={32} />
                             </div>
