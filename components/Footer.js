@@ -22,6 +22,9 @@ export default function Footer() {
                             <li>
                                 <Link href="#" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Trouver un formateur</Link>
                             </li>
+                            <li>
+                                <Link href="/administrateur" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Panel administrateur</Link>
+                            </li>
                         </ul>
                     </div>
 
