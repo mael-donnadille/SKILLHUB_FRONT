@@ -8,7 +8,7 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-    title: "Skill Hub - Formations en présentiel",
+    title: "SkillHub - Formations en présentiel",
     description: "Développez vos compétences avec nos ateliers pratiques et mentors experts.",
 };
 
