@@ -1,12 +1,13 @@
 "use client";
 
-import {Search, MapPin, Calendar, Users, BookOpen, Tag} from "lucide-react";
-import {motion, AnimatePresence} from "framer-motion";
-import {useState, useEffect, useRef} from "react";
-import {useRouter} from "next/navigation";
+import { Search, MapPin, Calendar, Users, BookOpen, Tag } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { slugify } from '@/utils/slugify';
 
 const containerVariants = {
-    hidden: {opacity: 0},
+    hidden: { opacity: 0 },
     visible: {
         opacity: 1,
         transition: {
@@ -17,36 +18,23 @@ const containerVariants = {
 };
 
 const itemVariants = {
-    hidden: {opacity: 0, y: 20},
+    hidden: { opacity: 0, y: 20 },
     visible: {
         opacity: 1,
         y: 0,
-        transition: {duration: 0.5, ease: "easeOut"}
+        transition: { duration: 0.5, ease: "easeOut" }
     }
 };
 
 export default function HeroSection({ allCourses = [] }) {
     const [query, setQuery] = useState("");
-    const [suggestions, setSuggestions] = useState([]);
     const [isFocused, setIsFocused] = useState(false);
     const router = useRouter();
     const wrapperRef = useRef(null);
 
-    // Close dropdown when clicking outside
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-                setIsFocused(false);
-            }
-        }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    useEffect(() => {
+    const suggestions = useMemo(() => {
         if (query.length < 2) {
-            setSuggestions([]);
-            return;
+            return [];
         }
 
         const lowerQuery = query.toLowerCase();
@@ -79,12 +67,23 @@ export default function HeroSection({ allCourses = [] }) {
             }
         });
 
-        setSuggestions(filtered.slice(0, 2));
+        return filtered.slice(0, 2);
     }, [query, allCourses]);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+                setIsFocused(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     const handleSearch = () => {
         if (query.trim()) {
-            router.push(`/courses?search=${encodeURIComponent(query)}`);
+            router.push(`/formations?search=${encodeURIComponent(query)}`);
         }
     };
 
@@ -96,16 +95,16 @@ export default function HeroSection({ allCourses = [] }) {
 
     const handleSuggestionClick = (suggestion) => {
         if (suggestion.type === 'course') {
-            router.push(`/courses?search=${encodeURIComponent(suggestion.label)}`);
+            router.push(`/formations?search=${encodeURIComponent(suggestion.label)}`);
         } else {
-            router.push(`/courses?category=${encodeURIComponent(suggestion.label)}`);
+            router.push(`/categories/${slugify(suggestion.label)}`);
         }
     };
 
     return (
         <section className="relative pt-20 pb-28 overflow-hidden bg-white">
-            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none"/>
-            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-72 h-72 bg-accent/5 rounded-full blur-3xl pointer-events-none"/>
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-72 h-72 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                 <motion.div
@@ -126,7 +125,7 @@ export default function HeroSection({ allCourses = [] }) {
                         variants={itemVariants}
                         className="text-4xl md:text-6xl font-extrabold tracking-tight text-primary mb-6 leading-tight"
                     >
-                        Des formations et des ateliers <br className="hidden md:block"/>
+                        Des formations et des ateliers <br className="hidden md:block" />
                         <span className="text-accent relative inline-block">
                             en présentiel
                             <svg className="absolute w-full h-3 -bottom-1 left-0 text-accent/30" viewBox="0 0 100 10" preserveAspectRatio="none">
@@ -135,9 +134,9 @@ export default function HeroSection({ allCourses = [] }) {
                                     stroke="currentColor"
                                     strokeWidth="3"
                                     fill="none"
-                                    initial={{pathLength: 0}}
-                                    animate={{pathLength: 1}}
-                                    transition={{duration: 0.8, delay: 0.5}}
+                                    initial={{ pathLength: 0 }}
+                                    animate={{ pathLength: 1 }}
+                                    transition={{ duration: 0.8, delay: 0.5 }}
                                 />
                             </svg>
                         </span> pour votre avenir
@@ -159,7 +158,7 @@ export default function HeroSection({ allCourses = [] }) {
                         <div className="bg-white p-2 rounded-2xl shadow-lg border border-slate-200 flex flex-col sm:flex-row gap-2 relative">
                             <div className="grow relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Search className="h-5 w-5 text-secondary"/>
+                                    <Search className="h-5 w-5 text-secondary" />
                                 </div>
                                 <input
                                     type="text"
@@ -172,8 +171,8 @@ export default function HeroSection({ allCourses = [] }) {
                                 />
                             </div>
                             <motion.button
-                                whileHover={{scale: 1.02}}
-                                whileTap={{scale: 0.98}}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
                                 onClick={handleSearch}
                                 className="px-8 py-3 bg-primary text-white font-bold rounded-xl hover:bg-[#1a365d] transition-colors flex items-center justify-center"
                             >
@@ -192,7 +191,7 @@ export default function HeroSection({ allCourses = [] }) {
                                 >
                                     <ul>
                                         {suggestions.map((item, idx) => (
-                                            <li 
+                                            <li
                                                 key={`${item.type}-${item.id}-${idx}`}
                                                 onClick={() => handleSuggestionClick(item)}
                                                 className="px-4 py-3 hover:bg-slate-50 cursor-pointer flex items-center gap-3 border-b border-slate-50 last:border-0 transition-colors"
@@ -228,15 +227,15 @@ export default function HeroSection({ allCourses = [] }) {
                         className="flex flex-wrap justify-center gap-8 text-secondary text-sm font-medium mt-12"
                     >
                         {[
-                            {icon: Users, text: "Apprentissage en groupe"},
-                            {icon: MapPin, text: "Campus dans 5 villes"},
-                            {icon: Calendar, text: "Participez à des ateliers"}
+                            { icon: Users, text: "Apprentissage en groupe" },
+                            { icon: MapPin, text: "Campus dans 5 villes" },
+                            { icon: Calendar, text: "Participez à des ateliers" }
                         ].map((item, idx) => (
                             <div
                                 key={idx}
                                 className="flex items-center gap-2 cursor-default hover:text-primary transition-colors"
                             >
-                                <item.icon className="text-accent h-5 w-5"/>
+                                <item.icon className="text-accent h-5 w-5" />
                                 <span>{item.text}</span>
                             </div>
                         ))}

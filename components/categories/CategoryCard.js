@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { ArrowRight, BookOpen, Code, Palette, Database, TrendingUp, Music, Camera, Layers } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { slugify } from '@/utils/slugify';
 
 export default function CategoryCard({ category, index }) {
     // Helper to get icon based on category name
@@ -35,7 +36,7 @@ export default function CategoryCard({ category, index }) {
             className="group relative overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-300 border border-slate-100"
         >
             <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${getGradient(category.nom)}`} />
-            
+
             <div className="p-6">
                 <div className={`inline-flex items-center justify-center p-3 rounded-xl bg-slate-50 text-slate-700 mb-4 group-hover:scale-110 transition-transform duration-300 ${getGradient(category.nom).replace('from-', 'text-').split(' ')[0]}`}>
                     {getIcon(category.nom)}
@@ -50,16 +51,16 @@ export default function CategoryCard({ category, index }) {
                 </p>
 
                 <div className="mt-auto">
-                    <Link 
-                        href={`/courses?category=${category.nom}`}
-                        className="inline-flex items-center text-sm font-semibold text-primary hover:text-blue-600 transition-colors group/link"
+                    <Link
+                        href={`/categories/${slugify(category.nom)}`}
+                        className="w-full inline-flex items-center justify-center px-4 py-2 bg-slate-50 text-secondary font-bold rounded-xl hover:bg-primary hover:text-white transition-all duration-300 group/link"
                     >
                         Explorer
                         <ArrowRight size={16} className="ml-2 group-hover/link:translate-x-1 transition-transform" />
                     </Link>
                 </div>
             </div>
-            
+
             {/* Decorative background element */}
             <div className={`absolute -bottom-4 -right-4 w-24 h-24 rounded-full opacity-5 bg-gradient-to-br ${getGradient(category.nom)} pointer-events-none group-hover:scale-150 transition-transform duration-500`} />
         </motion.div>

@@ -3,13 +3,24 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { User, LogOut, Menu, X } from 'lucide-react';
 
 export default function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const pathname = usePathname();
     const isConnected = false;
 
     const toggleMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+
+    const isActive = (path) => pathname?.startsWith(path);
+
+    const getLinkClass = (path) => {
+        const baseClass = "font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-xl px-3 py-2";
+        return isActive(path)
+            ? `text-primary bg-blue-50 font-bold ${baseClass}`
+            : `text-secondary hover:text-primary ${baseClass}`;
+    };
 
     return (
         <header className="w-full bg-background/90 backdrop-blur-md border-b border-slate-100 sticky top-0 z-50">
@@ -21,13 +32,13 @@ export default function Navbar() {
 
                 <ul className="hidden md:flex space-x-4">
                     <li>
-                        <Link href="/formations" className="text-secondary hover:text-primary font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-xl px-3 py-2">Formations</Link>
+                        <Link href="/formations" className={getLinkClass('/formations')}>Formations</Link>
                     </li>
                     <li>
-                        <Link href="/categories" className="text-secondary hover:text-primary font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-xl px-3 py-2">Catégories</Link>
+                        <Link href="/categories" className={getLinkClass('/categories')}>Catégories</Link>
                     </li>
                     <li>
-                        <Link href="/formateurs" className="text-secondary hover:text-primary font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-xl px-3 py-2">Formateurs</Link>
+                        <Link href="/formateurs" className={getLinkClass('/formateurs')}>Formateurs</Link>
                     </li>
                 </ul>
 
@@ -67,9 +78,9 @@ export default function Navbar() {
             {isMobileMenuOpen && (
                 <div id="mobile-menu" className="md:hidden bg-background border-t border-slate-100 absolute w-full left-0 shadow-xl animate-in slide-in-from-top-5 duration-200">
                     <div className="px-4 pt-2 pb-6 space-y-2">
-                        <Link href="/formations" className="block px-3 py-3 rounded-xl text-base font-medium text-primary hover:text-[#1a365d] hover:bg-blue-50">Formations</Link>
-                        <Link href="/categories" className="block px-3 py-3 rounded-xl text-base font-medium text-primary hover:text-[#1a365d] hover:bg-blue-50">Catégories</Link>
-                        <Link href="/formateurs" className="block px-3 py-3 rounded-xl text-base font-medium text-primary hover:text-[#1a365d] hover:bg-blue-50">Formateurs</Link>
+                        <Link href="/formations" className={`block px-3 py-3 rounded-xl text-base font-medium ${isActive('/formations') ? 'text-primary bg-blue-50 font-bold' : 'text-primary hover:text-[#1a365d] hover:bg-blue-50'}`}>Formations</Link>
+                        <Link href="/categories" className={`block px-3 py-3 rounded-xl text-base font-medium ${isActive('/categories') ? 'text-primary bg-blue-50 font-bold' : 'text-primary hover:text-[#1a365d] hover:bg-blue-50'}`}>Catégories</Link>
+                        <Link href="/formateurs" className={`block px-3 py-3 rounded-xl text-base font-medium ${isActive('/formateurs') ? 'text-primary bg-blue-50 font-bold' : 'text-primary hover:text-[#1a365d] hover:bg-blue-50'}`}>Formateurs</Link>
                         <div className="border-t border-slate-100 my-2 pt-2">
                             {isConnected ? (
                                 <>
