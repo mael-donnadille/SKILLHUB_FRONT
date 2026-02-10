@@ -1,10 +1,32 @@
 "use client";
 import Link from "next/link";
 import { ArrowRight, MapPin, Calendar, Users } from "lucide-react";
-import { COURSES } from "@/data/mocks";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 export default function CourseListSection() {
+    const [courses, setCourses] = useState([]);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/api/formations');
+                const data = await response.json();
+                setCourses(data);
+            } catch (error) {
+                console.error("Error fetching courses:", error);
+            }
+        };
+
+        fetchCourses();
+    }, []);
+
+    const formatDate = (dateString) => {
+        if (!dateString) return "";
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('fr-FR', options);
+    };
+
     return (
         <section className="py-20 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,7 +39,7 @@ export default function CourseListSection() {
                             transition={{ duration: 0.5 }}
                             className="text-3xl font-bold text-primary mb-2"
                         >
-                            Prochaines rentrées
+                            Prochaines formations
                         </motion.h2>
                         <motion.p 
                             initial={{ opacity: 0, x: -20 }}
@@ -26,7 +48,7 @@ export default function CourseListSection() {
                             transition={{ duration: 0.5, delay: 0.1 }}
                             className="text-secondary"
                         >
-                            Rejoignez une de nos sessions annuelles et changez de métier.
+                            Rejoignez un de nos ateliers pour développer de nouvelles compétences.
                         </motion.p>
                     </div>
                     <motion.div
@@ -42,7 +64,7 @@ export default function CourseListSection() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {COURSES.map((course, index) => (
+                    {courses.slice(0, 3).map((course, index) => (
                         <motion.div 
                             key={course.id}
                             initial={{ opacity: 0, y: 30 }}
@@ -57,21 +79,21 @@ export default function CourseListSection() {
                                 </div>
                                 
                                 <div className="absolute top-4 left-4 bg-white px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm z-20">
-                                    {course.category}
+                                    {course.categorie?.nom}
                                 </div>
                                 <div className="absolute bottom-4 left-4 text-white font-medium flex items-center gap-1 z-20">
-                                    <MapPin size={16} /> {course.city}
+                                    <MapPin size={16} /> Paris
                                 </div>
                             </div>
                             <div className="p-6 grow flex flex-col">
                                 <h3 className="text-xl font-bold text-primary mb-4 group-hover:text-accent transition-colors">
-                                    {course.title}
+                                    {course.titre}
                                 </h3>
                                 
                                 <div className="space-y-3 mb-6 grow">
                                     <div className="flex items-center text-secondary text-sm">
                                         <Calendar size={16} className="mr-2 text-secondary" />
-                                        {course.date}
+                                        {formatDate(course.dateProposition)}
                                     </div>
                                     <div className="flex items-center text-secondary text-sm">
                                         <Users size={16} className="mr-2 text-secondary" />
@@ -81,7 +103,7 @@ export default function CourseListSection() {
 
                                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
                                     <span className="text-sm font-medium text-accent bg-orange-50 px-2 py-1 rounded-md">
-                                        Plus que {course.spots} places
+                                        Places limitées
                                     </span>
                                     <button className="text-primary font-bold text-sm hover:underline flex items-center group/btn">
                                         Candidater <span className="ml-1 group-hover/btn:translate-x-1 transition-transform">&rarr;</span>

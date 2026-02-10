@@ -10,7 +10,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
                     <div className="space-y-6">
                         <Link href="/" className="text-2xl font-extrabold text-primary hover:text-[#1a365d] transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-xl px-2 -ml-2">SkillHub</Link>
-                        <p className="text-secondary text-sm leading-relaxed max-w-xs">La plateforme idéale pour développer vos compétences et connecter avec des experts du monde entier.</p>
+                        <p className="text-secondary text-sm leading-relaxed max-w-xs">Des formations et des ateliers en présentiel pour votre avenir</p>
                     </div>
 
                     <div>
@@ -21,9 +21,6 @@ export default function Footer() {
                             </li>
                             <li>
                                 <Link href="#" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Trouver un formateur</Link>
-                            </li>
-                            <li>
-                                <Link href="/administrateur" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Panel administrateur</Link>
                             </li>
                         </ul>
                     </div>
