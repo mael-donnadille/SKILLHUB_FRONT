@@ -24,6 +24,9 @@ export default function Navbar() {
                         <Link href="#" className="text-secondary hover:text-primary font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-xl px-3 py-2">Formations</Link>
                     </li>
                     <li>
+                        <Link href="#" className="text-secondary hover:text-primary font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-xl px-3 py-2">Catégories</Link>
+                    </li>
+                    <li>
                         <Link href="#" className="text-secondary hover:text-primary font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-xl px-3 py-2">Formateurs</Link>
                     </li>
                 </ul>
@@ -65,6 +68,7 @@ export default function Navbar() {
                 <div id="mobile-menu" className="md:hidden bg-background border-t border-slate-100 absolute w-full left-0 shadow-xl animate-in slide-in-from-top-5 duration-200">
                     <div className="px-4 pt-2 pb-6 space-y-2">
                         <Link href="#" className="block px-3 py-3 rounded-xl text-base font-medium text-primary hover:text-[#1a365d] hover:bg-blue-50">Formations</Link>
+                        <Link href="#" className="block px-3 py-3 rounded-xl text-base font-medium text-primary hover:text-[#1a365d] hover:bg-blue-50">Catégories</Link>
                         <Link href="#" className="block px-3 py-3 rounded-xl text-base font-medium text-primary hover:text-[#1a365d] hover:bg-blue-50">Formateurs</Link>
                         <div className="border-t border-slate-100 my-2 pt-2">
                             {isConnected ? (
