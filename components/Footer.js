@@ -17,13 +17,13 @@ export default function Footer() {
                         <h3 className="text-sm font-bold text-primary tracking-wider uppercase mb-6">Plateforme</h3>
                         <ul className="space-y-4">
                             <li>
-                                <Link href="#" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Parcourir les formations</Link>
+                                <Link href="/formations" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Parcourir les formations</Link>
                             </li>
                             <li>
-                                <Link href="#" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Voir les catégories</Link>
+                                <Link href="/categories" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Voir les catégories</Link>
                             </li>
                             <li>
-                                <Link href="#" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Trouver un formateur</Link>
+                                <Link href="/formateurs" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Trouver un formateur</Link>
                             </li>
                         </ul>
                     </div>
@@ -48,7 +48,7 @@ export default function Footer() {
                         <div className="flex space-x-4">
                             <a href="#" className="bg-slate-50 p-2 rounded-xl text-secondary hover:text-primary hover:bg-blue-50 transition-all focus:outline-none focus:ring-2 focus:ring-primary" aria-label="Twitter"><Twitter size={20} /></a>
                             <a href="#" className="bg-slate-50 p-2 rounded-xl text-secondary hover:text-primary hover:bg-blue-50 transition-all focus:outline-none focus:ring-2 focus:ring-primary" aria-label="LinkedIn"><Linkedin size={20} /></a>
-                            <a href="#" className="bg-slate-50 p-2 rounded-xl text-secondary hover:text-primary hover:bg-blue-50 transition-all focus:outline-none focus:ring-2 focus:ring-primary" aria-label="GitHub"><Github size={20}/></a>
+                            <a href="#" className="bg-slate-50 p-2 rounded-xl text-secondary hover:text-primary hover:bg-blue-50 transition-all focus:outline-none focus:ring-2 focus:ring-primary" aria-label="GitHub"><Github size={20} /></a>
                             <a href="mailto:contact@skillhub.com" className="bg-slate-50 p-2 rounded-xl text-secondary hover:text-accent hover:bg-orange-50 transition-all focus:outline-none focus:ring-2 focus:ring-primary" aria-label="Email"><Mail size={20} /></a>
                         </div>
                     </div>
