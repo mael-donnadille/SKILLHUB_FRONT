@@ -53,8 +53,8 @@ export default function Navbar() {
                         </>
                     ) : (
                         <>
-                            <Link href="/login" className="px-5 py-2.5 text-primary font-bold hover:bg-blue-50 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary">Connexion</Link>
-                            <Link href="/register" className="px-5 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-[#1a365d] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">Inscription</Link>
+                            <Link href="/connexion" className="px-5 py-2.5 text-primary font-bold hover:bg-blue-50 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary">Connexion</Link>
+                            <Link href="/inscription" className="px-5 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-[#1a365d] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">Inscription</Link>
                         </>
                     )}
                 </div>
@@ -91,8 +91,8 @@ export default function Navbar() {
                                 </>
                             ) : (
                                 <div className="grid grid-cols-2 gap-4 mt-4 px-2">
-                                    <Link href="/login" className="flex justify-center items-center px-4 py-3 border border-slate-200 rounded-xl text-base font-bold text-primary hover:bg-blue-50">Connexion</Link>
-                                    <Link href="/register" className="flex justify-center items-center px-4 py-3 bg-primary rounded-xl text-base font-bold text-white hover:bg-[#1a365d]">Inscription</Link>
+                                    <Link href="/connexion" className="flex justify-center items-center px-4 py-3 border border-slate-200 rounded-xl text-base font-bold text-primary hover:bg-blue-50">Connexion</Link>
+                                    <Link href="/inscription" className="flex justify-center items-center px-4 py-3 bg-primary rounded-xl text-base font-bold text-white hover:bg-[#1a365d]">Inscription</Link>
                                 </div>
                             )}
                         </div>
