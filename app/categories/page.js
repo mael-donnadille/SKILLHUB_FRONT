@@ -13,8 +13,30 @@ async function getCategories() {
     }
 }
 
+async function getCourses() {
+    try {
+        const res = await fetch('http://localhost:8000/api/formations', { cache: 'no-store' });
+        if (!res.ok) {
+            throw new Error('Failed to fetch courses');
+        }
+        return res.json();
+    } catch (error) {
+        console.error("Error fetching courses:", error);
+        return [];
+    }
+}
+
 export default async function CategoriesPage() {
     const categories = await getCategories();
+    const courses = await getCourses();
+
+    // Calculer le nombre de formations par catégorie
+    const categoriesWithCount = categories.map(category => {
+        const courseCount = courses.filter(course =>
+            course.categorie && course.categorie.id === category.id
+        ).length;
+        return { ...category, courseCount };
+    });
 
     return (
         <div className="min-h-screen flex flex-col bg-background font-sans">
@@ -27,7 +49,7 @@ export default async function CategoriesPage() {
                         </p>
                     </div>
 
-                    <CategoriesList initialCategories={categories} />
+                    <CategoriesList initialCategories={categoriesWithCount} />
                 </div>
             </main>
         </div>

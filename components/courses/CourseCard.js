@@ -1,5 +1,58 @@
 import Link from "next/link";
-import { Calendar, User } from "lucide-react";
+import { Calendar, User, Code, Palette, Database, TrendingUp, Languages, Users, Target, ArrowRight } from "lucide-react";
+
+// Configuration précise pour chaque catégorie
+const CATEGORY_CONFIG = {
+    "Développement Web": {
+        icon: Code,
+        accentColor: "border-blue-500",
+        bgColor: "bg-blue-50",
+        textColor: "text-blue-700",
+        iconBg: "bg-blue-100",
+    },
+    "Design Graphique": {
+        icon: Palette,
+        accentColor: "border-purple-500",
+        bgColor: "bg-purple-50",
+        textColor: "text-purple-700",
+        iconBg: "bg-purple-100",
+    },
+    "Marketing Digital": {
+        icon: TrendingUp,
+        accentColor: "border-orange-500",
+        bgColor: "bg-orange-50",
+        textColor: "text-orange-700",
+        iconBg: "bg-orange-100",
+    },
+    "Gestion de Projet": {
+        icon: Target,
+        accentColor: "border-indigo-500",
+        bgColor: "bg-indigo-50",
+        textColor: "text-indigo-700",
+        iconBg: "bg-indigo-100",
+    },
+    "Data Science": {
+        icon: Database,
+        accentColor: "border-emerald-500",
+        bgColor: "bg-emerald-50",
+        textColor: "text-emerald-700",
+        iconBg: "bg-emerald-100",
+    },
+    "Langues": {
+        icon: Languages,
+        accentColor: "border-rose-500",
+        bgColor: "bg-rose-50",
+        textColor: "text-rose-700",
+        iconBg: "bg-rose-100",
+    },
+    "Soft Skills": {
+        icon: Users,
+        accentColor: "border-violet-500",
+        bgColor: "bg-violet-50",
+        textColor: "text-violet-700",
+        iconBg: "bg-violet-100",
+    }
+};
 
 export default function CourseCard({ course }) {
     const formatDate = (dateString) => {
@@ -8,72 +61,82 @@ export default function CourseCard({ course }) {
         return new Date(dateString).toLocaleDateString('fr-FR', options);
     };
 
-    const getCategoryColor = (categoryName) => {
-        const name = categoryName?.toLowerCase() || "";
-        if (name.includes("web") || name.includes("code")) return "bg-blue-50 text-blue-700 border-blue-100";
-        if (name.includes("design") || name.includes("graphique")) return "bg-purple-50 text-purple-700 border-purple-100";
-        if (name.includes("data")) return "bg-emerald-50 text-emerald-700 border-emerald-100";
-        if (name.includes("marketing")) return "bg-orange-50 text-orange-700 border-orange-100";
-        return "bg-slate-50 text-slate-700 border-slate-100";
+    // Récupérer la configuration de la catégorie
+    const config = CATEGORY_CONFIG[course.categorie?.nom] || {
+        icon: Code,
+        accentColor: "border-slate-500",
+        bgColor: "bg-slate-50",
+        textColor: "text-slate-700",
+        iconBg: "bg-slate-100",
     };
 
-    const getHeaderGradient = (categoryName) => {
-        const name = categoryName?.toLowerCase() || "";
-        if (name.includes("web") || name.includes("code")) return "from-blue-500/10 to-blue-500/5";
-        if (name.includes("design") || name.includes("graphique")) return "from-purple-500/10 to-purple-500/5";
-        if (name.includes("data")) return "from-emerald-500/10 to-emerald-500/5";
-        if (name.includes("marketing")) return "from-orange-500/10 to-orange-500/5";
-        return "from-slate-500/10 to-slate-500/5";
-    };
+    const IconComponent = config.icon;
 
     return (
-        <div className="group bg-white rounded-2xl border border-slate-200 hover:border-primary hover:shadow-xl transition-all duration-300 flex flex-col h-full overflow-hidden">
-            <div className={`h-2 w-full bg-gradient-to-r ${getHeaderGradient(course.categorie?.nom)}`}></div>
+        <Link href={`/formations/${course.id}`}>
+            <div className={`group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-full flex flex-col overflow-hidden border-l-4 ${config.accentColor}`}>
 
-            <div className="p-6 flex flex-col h-full relative">
-                <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${getHeaderGradient(course.categorie?.nom)} opacity-50 pointer-events-none`}></div>
+                {/* Header avec icône et badge */}
+                <div className="p-6 pb-4">
+                    <div className="flex items-start justify-between mb-4">
+                        {/* Icône de catégorie */}
+                        <div className={`p-3 rounded-xl ${config.iconBg} group-hover:scale-110 transition-transform duration-300`}>
+                            <IconComponent size={24} className={config.textColor} strokeWidth={2} />
+                        </div>
 
-                <div className="flex justify-between items-start mb-4 relative z-10">
-                    <span className={`text-xs font-bold px-3 py-1 rounded-full border ${getCategoryColor(course.categorie?.nom)}`}>
-                        {course.categorie?.nom}
-                    </span>
-                    {course.statut === "VALIDE" && (
-                        <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-md border border-green-100">
-                            Ouvert
+                        {/* Badge statut */}
+                        {course.statut === "VALIDE" && (
+                            <span className="text-xs font-semibold text-green-700 bg-green-50 px-3 py-1.5 rounded-full border border-green-200">
+                                Ouvert
+                            </span>
+                        )}
+                    </div>
+
+                    {/* Catégorie */}
+                    <div className="mb-3">
+                        <span className={`text-xs font-bold ${config.textColor} uppercase tracking-wide`}>
+                            {course.categorie?.nom}
                         </span>
-                    )}
-                </div>
+                    </div>
 
-                <Link href={`/formations/${course.id}`} className="group-hover:text-accent transition-colors">
-                    <h3 className="text-xl font-bold text-primary mb-3 relative z-10">
+                    {/* Titre */}
+                    <h3 className="text-xl font-bold text-primary mb-3 line-clamp-2 leading-tight group-hover:text-blue-600 transition-colors">
                         {course.titre}
                     </h3>
-                </Link>
 
-                <p className="text-slate-600 text-sm mb-6 line-clamp-3 flex-grow relative z-10">
-                    {course.description}
-                </p>
-
-                <div className="space-y-3 pt-4 border-t border-slate-100 relative z-10">
-                    <div className="flex items-center text-secondary text-sm">
-                        <Calendar size={16} className="mr-2 text-primary/70" />
-                        {formatDate(course.dateProposition)}
-                    </div>
-                    <div className="flex items-center text-secondary text-sm">
-                        <User size={16} className="mr-2 text-primary/70" />
-                        {course.formateur ? `${course.formateur.prenom} ${course.formateur.nom}` : 'Formateur expert'}
-                    </div>
+                    {/* Description */}
+                    <p className="text-slate-600 text-sm mb-4 line-clamp-3 leading-relaxed">
+                        {course.description}
+                    </p>
                 </div>
 
-                <div className="mt-6 pt-4 flex items-center justify-between relative z-10">
-                    <span className="text-xs text-slate-400 font-medium bg-slate-50 px-2 py-1 rounded">
-                        {course.annee?.libelle}
-                    </span>
-                    <Link href={`/formations/${course.id}`} className="px-4 py-2 bg-primary text-white font-bold rounded-lg hover:bg-[#1a365d] transition-colors flex items-center group/btn shadow-md hover:shadow-lg">
-                        Voir le détail <span className="ml-2 group-hover/btn:translate-x-1 transition-transform">&rarr;</span>
-                    </Link>
+                {/* Footer avec métadonnées */}
+                <div className="mt-auto p-6 pt-4 bg-slate-50/50 border-t border-slate-100">
+                    <div className="space-y-2 mb-4">
+                        <div className="flex items-center text-slate-600 text-xs">
+                            <Calendar size={14} className="mr-2 text-slate-400" />
+                            <span>{formatDate(course.dateProposition)}</span>
+                        </div>
+                        <div className="flex items-center text-slate-600 text-xs">
+                            <User size={14} className="mr-2 text-slate-400" />
+                            <span>{course.formateur ? `${course.formateur.prenom} ${course.formateur.nom}` : 'Formateur expert'}</span>
+                        </div>
+                    </div>
+
+                    {/* CTA */}
+                    <div className="flex items-center justify-between">
+                        {course.annee?.libelle && (
+                            <span className="text-xs text-slate-500 font-medium">
+                                {course.annee.libelle}
+                            </span>
+                        )}
+                        <div className="ml-auto inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold text-sm rounded-lg hover:bg-[#1a365d] transition-all hover:scale-105 hover:shadow-lg">
+                            <span>Voir plus</span>
+                            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 }
