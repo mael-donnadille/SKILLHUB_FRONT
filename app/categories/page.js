@@ -1,5 +1,4 @@
-import CategoryCard from "@/components/categories/CategoryCard";
-import { Search } from "lucide-react";
+import CategoriesList from "@/components/categories/CategoriesList";
 
 async function getCategories() {
     try {
@@ -28,19 +27,7 @@ export default async function CategoriesPage() {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {categories.length > 0 ? (
-                            categories.map((category) => (
-                                <CategoryCard key={category.id} category={category} />
-                            ))
-                        ) : (
-                            <div className="col-span-full text-center py-12 bg-slate-50 rounded-2xl border border-slate-200">
-                                <Search className="mx-auto h-12 w-12 text-slate-400 mb-4" />
-                                <h3 className="text-lg font-medium text-primary">Aucune catégorie trouvée</h3>
-                                <p className="text-secondary mt-2">Le catalogue est actuellement vide ou inaccessible.</p>
-                            </div>
-                        )}
-                    </div>
+                    <CategoriesList initialCategories={categories} />
                 </div>
             </main>
         </div>
