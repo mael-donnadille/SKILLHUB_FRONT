@@ -1,4 +1,5 @@
-import CategoryList from "@/components/categories/CategoryList";
+import CategoryCard from "@/components/categories/CategoryCard";
+import { Search } from "lucide-react";
 
 async function getCategories() {
     try {
@@ -18,19 +19,28 @@ export default async function CategoriesPage() {
 
     return (
         <div className="min-h-screen flex flex-col bg-background font-sans">
-            <main className="grow py-20 px-4 sm:px-6 lg:px-8 bg-slate-50/50">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-6">
-                            Explorez nos Catégories
-                        </h1>
-                        <p className="text-xl text-secondary max-w-2xl mx-auto">
-                            Trouvez la formation idéale parmi nos domaines d&apos;expertise variés.
-                            Chaque catégorie regroupe des cours conçus pour booster votre carrière.
+            <main className="grow pt-10 pb-10">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="mb-10 text-center">
+                        <h1 className="text-4xl font-extrabold text-primary mb-4">Toutes nos Catégories</h1>
+                        <p className="text-secondary max-w-2xl mx-auto">
+                            Explorez l'ensemble de nos catégories de formations et trouvez celle qui correspond à vos ambitions.
                         </p>
                     </div>
 
-                    <CategoryList categories={categories} />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {categories.length > 0 ? (
+                            categories.map((category) => (
+                                <CategoryCard key={category.id} category={category} />
+                            ))
+                        ) : (
+                            <div className="col-span-full text-center py-12 bg-slate-50 rounded-2xl border border-slate-200">
+                                <Search className="mx-auto h-12 w-12 text-slate-400 mb-4" />
+                                <h3 className="text-lg font-medium text-primary">Aucune catégorie trouvée</h3>
+                                <p className="text-secondary mt-2">Le catalogue est actuellement vide ou inaccessible.</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </main>
         </div>
