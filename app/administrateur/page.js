@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from 'react';
 import { Users, BookOpen, Layers, Calendar, LayoutDashboard } from 'lucide-react';
 import StudentManagement from "@/components/administrateur/StudentManagement";
