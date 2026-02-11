@@ -37,9 +37,6 @@ export default function Navbar() {
                     <li>
                         <Link href="/categories" className={getLinkClass('/categories')}>Catégories</Link>
                     </li>
-                    <li>
-                        <Link href="/formateurs" className={getLinkClass('/formateurs')}>Formateurs</Link>
-                    </li>
                 </ul>
 
                 <div className="hidden md:flex items-center space-x-4">
@@ -80,7 +77,6 @@ export default function Navbar() {
                     <div className="px-4 pt-2 pb-6 space-y-2">
                         <Link href="/formations" className={`block px-3 py-3 rounded-xl text-base font-medium ${isActive('/formations') ? 'text-primary bg-blue-50 font-bold' : 'text-primary hover:text-[#1a365d] hover:bg-blue-50'}`}>Formations</Link>
                         <Link href="/categories" className={`block px-3 py-3 rounded-xl text-base font-medium ${isActive('/categories') ? 'text-primary bg-blue-50 font-bold' : 'text-primary hover:text-[#1a365d] hover:bg-blue-50'}`}>Catégories</Link>
-                        <Link href="/formateurs" className={`block px-3 py-3 rounded-xl text-base font-medium ${isActive('/formateurs') ? 'text-primary bg-blue-50 font-bold' : 'text-primary hover:text-[#1a365d] hover:bg-blue-50'}`}>Formateurs</Link>
                         <div className="border-t border-slate-100 my-2 pt-2">
                             {isConnected ? (
                                 <>
