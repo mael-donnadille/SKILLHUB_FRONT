@@ -164,7 +164,7 @@ export default function RegisterPage() {
                     <div className="text-center pt-4">
                         <p className="text-secondary">
                             Déjà inscrit ?{' '}
-                            <Link href="/login" className="font-bold text-primary hover:text-accent transition-colors">
+                            <Link href="/connexion" className="font-bold text-primary hover:text-accent transition-colors">
                                 Se connecter
                             </Link>
                         </p>
