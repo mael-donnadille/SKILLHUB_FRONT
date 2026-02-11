@@ -29,13 +29,13 @@ export default function Footer() {
                         <h3 className="text-sm font-bold text-primary tracking-wider uppercase mb-6">Support & Légal</h3>
                         <ul className="space-y-4">
                             <li>
-                                <Link href="/help" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Centre d&apos;aide</Link>
+                                <Link href="/aide" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Centre d&apos;aide</Link>
                             </li>
                             <li>
-                                <Link href="/privacy" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Confidentialité</Link>
+                                <Link href="/confidentialite" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Confidentialité</Link>
                             </li>
                             <li>
-                                <Link href="/terms" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Conditions d&apos;utilisation</Link>
+                                <Link href="/conditions-generales" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Conditions d&apos;utilisation</Link>
                             </li>
                         </ul>
                     </div>
