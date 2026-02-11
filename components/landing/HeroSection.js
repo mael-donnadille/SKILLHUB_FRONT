@@ -4,7 +4,6 @@ import { Search, MapPin, Calendar, Users, BookOpen, Tag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { slugify } from '@/utils/slugify';
 
 const containerVariants = {
     hidden: { opacity: 0 },
