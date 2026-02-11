@@ -1,6 +1,4 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import CategoryList from "@/components/categories/CategoryList";
+import CategoriesList from "@/components/categories/CategoriesList";
 
 async function getCategories() {
     try {
@@ -15,30 +13,45 @@ async function getCategories() {
     }
 }
 
+async function getCourses() {
+    try {
+        const res = await fetch('http://localhost:8000/api/formations', { cache: 'no-store' });
+        if (!res.ok) {
+            throw new Error('Failed to fetch courses');
+        }
+        return res.json();
+    } catch (error) {
+        console.error("Error fetching courses:", error);
+        return [];
+    }
+}
+
 export default async function CategoriesPage() {
     const categories = await getCategories();
+    const courses = await getCourses();
+
+    // Calculer le nombre de formations par catégorie
+    const categoriesWithCount = categories.map(category => {
+        const courseCount = courses.filter(course =>
+            course.categorie && course.categorie.id === category.id
+        ).length;
+        return { ...category, courseCount };
+    });
 
     return (
         <div className="min-h-screen flex flex-col bg-background font-sans">
-            <Navbar />
-
-            <main className="grow py-20 px-4 sm:px-6 lg:px-8 bg-slate-50/50">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-6">
-                            Explorez nos Catégories
-                        </h1>
-                        <p className="text-xl text-secondary max-w-2xl mx-auto">
-                            Trouvez la formation idéale parmi nos domaines d&apos;expertise variés.
-                            Chaque catégorie regroupe des cours conçus pour booster votre carrière.
+            <main className="grow pt-10 pb-10">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="mb-10 text-center">
+                        <h1 className="text-4xl font-extrabold text-primary mb-4">Toutes nos Catégories</h1>
+                        <p className="text-secondary max-w-2xl mx-auto">
+                            Explorez l'ensemble de nos catégories de formations et trouvez celle qui correspond à vos ambitions.
                         </p>
                     </div>
 
-                    <CategoryList categories={categories} />
+                    <CategoriesList initialCategories={categoriesWithCount} />
                 </div>
             </main>
-
-            <Footer />
         </div>
     );
 }

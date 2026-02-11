@@ -22,9 +22,6 @@ export default function Footer() {
                             <li>
                                 <Link href="/categories" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Voir les catégories</Link>
                             </li>
-                            <li>
-                                <Link href="/formateurs" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Trouver un formateur</Link>
-                            </li>
                         </ul>
                     </div>
 
@@ -32,13 +29,13 @@ export default function Footer() {
                         <h3 className="text-sm font-bold text-primary tracking-wider uppercase mb-6">Support & Légal</h3>
                         <ul className="space-y-4">
                             <li>
-                                <Link href="#" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Centre d&apos;aide</Link>
+                                <Link href="/aide" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Centre d&apos;aide</Link>
                             </li>
                             <li>
-                                <Link href="#" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Confidentialité</Link>
+                                <Link href="/confidentialite" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Confidentialité</Link>
                             </li>
                             <li>
-                                <Link href="#" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Conditions d&apos;utilisation</Link>
+                                <Link href="/conditions-generales" className="text-secondary hover:text-primary text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1 -ml-1">Conditions d&apos;utilisation</Link>
                             </li>
                         </ul>
                     </div>
@@ -55,7 +52,7 @@ export default function Footer() {
                 </div>
 
                 <div className="mt-12 pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-secondary text-sm font-medium">&copy; {currentYear} Skill Hub Inc. Tous droits réservés.</p>
+                    <p className="text-secondary text-sm font-medium">&copy; {currentYear} SkillHub Inc. Tous droits réservés.</p>
                     <div className="flex space-x-6">
                         <span className="flex items-center space-x-2">
                             <span className="w-2 h-2 rounded-full bg-success"></span>

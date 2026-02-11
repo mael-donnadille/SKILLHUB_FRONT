@@ -1,4 +1,4 @@
-import {Poppins} from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -12,11 +12,15 @@ export const metadata = {
     description: "Développez vos compétences avec nos ateliers pratiques et mentors experts.",
 };
 
-export default function RootLayout({children}) {
+import ClientLayout from "@/components/ClientLayout";
+
+export default function RootLayout({ children }) {
     return (
         <html lang="fr">
             <body className={`${poppins.variable} font-sans antialiased bg-background text-primary`}>
-                {children}
+                <ClientLayout>
+                    {children}
+                </ClientLayout>
             </body>
         </html>
     );
