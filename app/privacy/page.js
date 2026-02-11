@@ -1,13 +1,9 @@
 "use client";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { Shield, Lock, Eye, FileText, Scale } from "lucide-react";
 
 export default function PrivacyPage() {
     return (
         <div className="min-h-screen flex flex-col bg-slate-50 font-sans">
-            <Navbar />
-
             <main className="grow">
                 {/* Header */}
                 <section className="bg-primary text-white py-20 relative overflow-hidden">
@@ -124,8 +120,6 @@ export default function PrivacyPage() {
                     </div>
                 </section>
             </main>
-
-            <Footer />
         </div>
     );
 }

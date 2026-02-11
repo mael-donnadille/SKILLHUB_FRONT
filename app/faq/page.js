@@ -1,6 +1,4 @@
 "use client";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp, Search, MessageCircle } from "lucide-react";
@@ -52,8 +50,6 @@ export default function FaqPage() {
 
     return (
         <div className="min-h-screen flex flex-col bg-slate-50 font-sans">
-            <Navbar />
-
             <main className="grow">
                 {/* Hero */}
                 <section className="bg-primary text-white py-20 relative overflow-hidden">
@@ -176,8 +172,6 @@ export default function FaqPage() {
                     </div>
                 </section>
             </main>
-
-            <Footer />
         </div>
     );
 }

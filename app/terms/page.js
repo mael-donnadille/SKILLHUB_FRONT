@@ -1,13 +1,9 @@
 "use client";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { Scale, FileText, UserCheck, ShieldAlert, Copyright, Globe } from "lucide-react";
 
 export default function TermsPage() {
     return (
         <div className="min-h-screen flex flex-col bg-slate-50 font-sans">
-            <Navbar />
-
             <main className="grow">
                 {/* Header */}
                 <section className="bg-primary text-white py-20 relative overflow-hidden">
@@ -113,8 +109,6 @@ export default function TermsPage() {
                     </div>
                 </section>
             </main>
-
-            <Footer />
         </div>
     );
 }

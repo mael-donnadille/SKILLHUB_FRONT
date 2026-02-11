@@ -1,5 +1,3 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import CategoryList from "@/components/categories/CategoryList";
 
 async function getCategories() {
@@ -20,8 +18,6 @@ export default async function CategoriesPage() {
 
     return (
         <div className="min-h-screen flex flex-col bg-background font-sans">
-            <Navbar />
-
             <main className="grow py-20 px-4 sm:px-6 lg:px-8 bg-slate-50/50">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-16">
@@ -37,8 +33,6 @@ export default async function CategoriesPage() {
                     <CategoryList categories={categories} />
                 </div>
             </main>
-
-            <Footer />
         </div>
     );
 }

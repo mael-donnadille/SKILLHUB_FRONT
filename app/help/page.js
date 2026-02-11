@@ -1,7 +1,5 @@
 "use client";
 import Link from 'next/link';
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { Search, HelpCircle, FileText, User, BookOpen, MessageCircle, ChevronDown, ChevronUp, Mail, Phone, Wrench, CheckCircle } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -111,8 +109,6 @@ export default function HelpPage() {
 
     return (
         <div className="min-h-screen flex flex-col bg-slate-50 font-sans">
-            <Navbar />
-
             <main className="grow">
                 {/* Hero Section */}
                 <section className="bg-primary text-white py-20 relative">
@@ -334,8 +330,6 @@ export default function HelpPage() {
                     </div>
                 </section>
             </main>
-
-            <Footer />
         </div>
     );
 }
