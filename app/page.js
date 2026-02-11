@@ -3,7 +3,6 @@ import Footer from "@/components/Footer";
 import HeroSection from "@/components/landing/HeroSection";
 import FeaturesSection from "@/components/landing/FeaturesSection";
 import CourseListSection from "@/components/landing/CourseListSection";
-import MentorsSection from "@/components/landing/MentorsSection";
 import CtaSection from "@/components/landing/CtaSection";
 
 async function getCourses() {
@@ -39,12 +38,9 @@ export default async function Home() {
             <Navbar />
 
             <main className="grow">
-                {/* On passe toutes les formations à la HeroSection pour la recherche */}
                 <HeroSection allCourses={courses} />
                 <FeaturesSection />
-                {/* On passe seulement les formations filtrées à la liste */}
                 <CourseListSection courses={upcomingCourses} />
-                <MentorsSection />
                 <CtaSection />
             </main>
 
