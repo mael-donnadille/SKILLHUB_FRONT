@@ -28,7 +28,7 @@ export default function RegisterPage() {
     return (
         <div className="min-h-screen w-full flex bg-white font-sans overflow-hidden">
             {/* Left Side - Form (50%) */}
-            <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 lg:p-12 relative z-10 bg-white">
+            <div className="w-full max-h-screen lg:w-1/2 flex flex-col justify-center items-center p-8 lg:p-12 relative z-10 bg-white">
                 <div className="absolute top-8 left-8">
                     <Link href="/" className="inline-flex items-center text-slate-500 hover:text-primary font-medium transition-colors">
                         <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
@@ -40,13 +40,15 @@ export default function RegisterPage() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="w-full max-w-lg space-y-8"
+                    className="w-full max-w-lg space-y-8 mt-10"
                 >
                     <div className="text-center lg:text-left">
-                        <div className="mx-auto lg:mx-0 h-14 w-14 bg-blue-50 rounded-xl flex items-center justify-center mb-6">
-                            <UserPlus className="h-7 w-7 text-primary" />
-                        </div>
-                        <h2 className="text-4xl font-extrabold text-primary tracking-tight">Créer un compte</h2>
+                        <h2 className="flex justify-left items-center gap-3 text-4xl font-extrabold text-primary tracking-tight">
+                            <div className="mx-auto lg:mx-0 h-12 w-12 bg-blue-50 rounded-xl flex items-center justify-center">
+                                <UserPlus className="h-6 w-6 text-primary" />
+                            </div>
+                            Créer un compte
+                        </h2>
                         <p className="mt-3 text-lg text-secondary">
                             Remplissez le formulaire ci-dessous pour commencer.
                         </p>

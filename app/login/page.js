@@ -38,13 +38,15 @@ export default function LoginPage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="w-full max-w-md space-y-8"
+                        className="w-full max-w-md space-y-8 mt-10"
                     >
                         <div className="text-center lg:text-left">
-                            <div className="mx-auto lg:mx-0 h-14 w-14 bg-blue-50 rounded-xl flex items-center justify-center mb-6">
-                                <User className="h-7 w-7 text-primary" />
-                            </div>
-                            <h2 className="text-4xl font-extrabold text-primary tracking-tight">Bon retour !</h2>
+                            <h2 className="flex justify-left items-center gap-3 text-4xl font-extrabold text-primary tracking-tight">
+                                <div className="mx-auto lg:mx-0 h-12 w-12 bg-blue-50 rounded-xl flex items-center justify-center">
+                                    <User className="h-6 w-6 text-primary" />
+                                </div>
+                                Bon retour !
+                            </h2>
                             <p className="mt-3 text-lg text-secondary">
                                 Connectez-vous pour continuer votre apprentissage.
                             </p>
@@ -142,7 +144,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* Right Side - Image/Content (50%) */}
-                <div className="hidden lg:flex w-1/2 bg-slate-900 relative overflow-hidden items-center justify-center p-12">
+                <div className="hidden lg:flex w-1/2 h-screen bg-slate-900 relative overflow-hidden items-center justify-center p-12">
                     <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2671&auto=format&fit=crop')] bg-cover bg-center opacity-40"></div>
                     <div className="absolute inset-0 bg-gradient-to-tr from-slate-900 via-slate-900/80 to-transparent"></div>
 
