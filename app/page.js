@@ -1,5 +1,6 @@
 import HeroSection from "@/components/landing/HeroSection";
 import FeaturesSection from "@/components/landing/FeaturesSection";
+import HowItWorksSection from "@/components/landing/HowItWorksSection";
 import CourseListSection from "@/components/landing/CourseListSection";
 import CtaSection from "@/components/landing/CtaSection";
 import { getFormations } from "@/services/formationService";
