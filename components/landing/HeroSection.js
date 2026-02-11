@@ -3,6 +3,7 @@
 import { Search, MapPin, Calendar, Users, BookOpen, Tag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef, useMemo } from "react";
+import { slugify } from "@/utils/slugify";
 import { useRouter } from "next/navigation";
 
 const containerVariants = {
