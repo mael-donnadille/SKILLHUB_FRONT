@@ -1,10 +1,8 @@
-"use client";
 import Link from 'next/link';
 import { ArrowRight, BookOpen, Code, Palette, Database, TrendingUp, Music, Camera, Layers } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { slugify } from '@/utils/slugify';
 
-export default function CategoryCard({ category, index }) {
+export default function CategoryCard({ category }) {
     // Helper to get icon based on category name
     const getIcon = (name) => {
         const lowerName = name?.toLowerCase() || "";
@@ -29,12 +27,8 @@ export default function CategoryCard({ category, index }) {
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.05 }}
-            className="group relative overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-300 border border-slate-100"
-        >
+        <div className="group relative overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-300 border border-slate-100">
+
             <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${getGradient(category.nom)}`} />
 
             <div className="p-6">
@@ -63,6 +57,6 @@ export default function CategoryCard({ category, index }) {
 
             {/* Decorative background element */}
             <div className={`absolute -bottom-4 -right-4 w-24 h-24 rounded-full opacity-5 bg-gradient-to-br ${getGradient(category.nom)} pointer-events-none group-hover:scale-150 transition-transform duration-500`} />
-        </motion.div>
+        </div>
     );
 }
