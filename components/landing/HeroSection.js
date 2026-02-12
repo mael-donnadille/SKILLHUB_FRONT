@@ -115,7 +115,7 @@ export default function HeroSection({ allCourses = [] }) {
                 >
                     <motion.div variants={itemVariants}>
                         <div
-                            className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-primary font-medium text-sm mb-6 border border-blue-100">
+                            className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-900 font-medium text-sm mb-6 border border-blue-200">
                             <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
                             Inscriptions ouvertes pour l&apos;année 2026
                         </div>

@@ -10,6 +10,21 @@ const poppins = Poppins({
 export const metadata = {
     title: "SkillHub - Formations en présentiel",
     description: "Développez vos compétences avec nos ateliers pratiques et mentors experts.",
+    metadataBase: new URL('https://skillhub.com'), // Remplacer par l'URL réelle en prod
+    openGraph: {
+        title: 'SkillHub - Formations en présentiel',
+        description: 'Développez vos compétences avec nos ateliers pratiques et mentors experts.',
+        url: 'https://skillhub.com',
+        siteName: 'SkillHub',
+        locale: 'fr_FR',
+        type: 'website',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'SkillHub - Formations en présentiel',
+        description: 'Développez vos compétences avec nos ateliers pratiques et mentors experts.',
+    },
+    keywords: ['formation', 'présentiel', 'développement', 'design', 'ateliers', 'mentoring'],
 };
 
 import ClientLayout from "@/components/ClientLayout";
