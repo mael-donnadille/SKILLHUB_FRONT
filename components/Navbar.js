@@ -26,7 +26,7 @@ export default function Navbar() {
         <header className="w-full bg-background/90 backdrop-blur-md border-b border-slate-100 sticky top-0 z-50">
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center" aria-label="Navigation principale">
                 <Link href="/" className="flex items-center gap-2 text-2xl font-extrabold text-primary hover:text-[#1a365d] transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-xl px-2">
-                    <Image src="/logo.png" alt="SkillHub logo" width={65} height={65} className={"mr-2 rounded-full"}></Image>
+                    <Image src="/logo.png" alt="SkillHub logo" width={65} height={65} className={"mr-2 rounded-full"} priority></Image>
                     <span>SkillHub</span>
                 </Link>
 
