@@ -30,33 +30,37 @@ export default function Navbar() {
                     <span>SkillHub</span>
                 </Link>
 
-                <ul className="hidden md:flex space-x-4">
-                    <li>
-                        <Link href="/formations" className={getLinkClass('/formations')}>Formations</Link>
-                    </li>
-                    <li>
-                        <Link href="/categories" className={getLinkClass('/categories')}>Catégories</Link>
-                    </li>
-                </ul>
+                <div className="hidden md:flex items-center gap-6 ml-auto">
+                    <ul className="flex space-x-2">
+                        <li>
+                            <Link href="/formations" className={getLinkClass('/formations')}>Formations</Link>
+                        </li>
+                        <li>
+                            <Link href="/categories" className={getLinkClass('/categories')}>Catégories</Link>
+                        </li>
+                    </ul>
 
-                <div className="hidden md:flex items-center space-x-4">
-                    {isConnected ? (
-                        <>
-                            <Link href="/profile" className="flex items-center space-x-2 px-4 py-2 text-primary hover:text-[#1a365d] hover:bg-blue-50 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary">
-                                <User size={20} aria-hidden="true" />
-                                <span className="font-medium">Compte</span>
-                            </Link>
-                            <button className="flex items-center space-x-2 px-4 py-2 text-red-600 border border-red-200 bg-red-50 rounded-xl hover:bg-red-100 hover:border-red-300 transition-all focus:outline-none focus:ring-2 focus:ring-red-500" aria-label="Se déconnecter">
-                                <LogOut size={18} aria-hidden="true" />
-                                <span className="font-medium">Déconnexion</span>
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            <Link href="/connexion" className="px-5 py-2.5 text-primary font-bold hover:bg-blue-50 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary">Connexion</Link>
-                            <Link href="/inscription" className="px-5 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-[#1a365d] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">Inscription</Link>
-                        </>
-                    )}
+                    <div className="h-6 w-px bg-slate-200"></div>
+
+                    <div className="flex items-center space-x-3">
+                        {isConnected ? (
+                            <>
+                                <Link href="/profile" className="flex items-center space-x-2 px-4 py-2 text-primary hover:text-[#1a365d] hover:bg-blue-50 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <User size={20} aria-hidden="true" />
+                                    <span className="font-medium">Compte</span>
+                                </Link>
+                                <button className="flex items-center space-x-2 px-4 py-2 text-red-600 border border-red-200 bg-red-50 rounded-xl hover:bg-red-100 hover:border-red-300 transition-all focus:outline-none focus:ring-2 focus:ring-red-500" aria-label="Se déconnecter">
+                                    <LogOut size={18} aria-hidden="true" />
+                                    <span className="font-medium">Déconnexion</span>
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/connexion" className="px-5 py-2.5 text-primary font-bold hover:bg-blue-50 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary">Connexion</Link>
+                                <Link href="/inscription" className="px-5 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-[#1a365d] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">Inscription</Link>
+                            </>
+                        )}
+                    </div>
                 </div>
 
                 <div className="md:hidden flex items-center">

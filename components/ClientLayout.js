@@ -7,12 +7,13 @@ import Footer from "@/components/Footer";
 export default function ClientLayout({ children }) {
     const pathname = usePathname();
     const isAuthPage = pathname === "/connexion" || pathname === "/inscription";
+    const isAdminPage = pathname?.startsWith("/administrateur");
 
     return (
         <>
-            {!isAuthPage && <Navbar />}
+            {!isAuthPage && !isAdminPage && <Navbar />}
             {children}
-            {!isAuthPage && <Footer />}
+            {!isAuthPage && !isAdminPage && <Footer />}
         </>
     );
 }
