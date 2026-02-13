@@ -8,12 +8,13 @@ export default function ClientLayout({ children }) {
     const pathname = usePathname();
     const isAuthPage = pathname === "/connexion" || pathname === "/inscription";
     const isAdminPage = pathname?.startsWith("/administrateur");
+    const isLearnerPage = pathname?.startsWith("/apprenant");
 
     return (
         <>
-            {!isAuthPage && !isAdminPage && <Navbar />}
+            {!isAuthPage && !isAdminPage && !isLearnerPage && <Navbar />}
             {children}
-            {!isAuthPage && !isAdminPage && <Footer />}
+            {!isAuthPage && !isAdminPage && !isLearnerPage && <Footer />}
         </>
     );
 }
