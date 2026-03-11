@@ -5,11 +5,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { User, LogOut, Menu, X } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const pathname = usePathname();
-    const isConnected = false;
+    const { isAuthenticated, logout, user } = useAuth();
 
     const toggleMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
@@ -20,6 +21,25 @@ export default function Navbar() {
         return isActive(path)
             ? `text-primary bg-blue-50 font-bold ${baseClass}`
             : `text-secondary hover:text-primary ${baseClass}`;
+    };
+
+    // Determine profile link based on user role
+    const getProfileLink = () => {
+        if (!user) return '/profile';
+        const role = user.type || user.role || (user.roles && user.roles[0]);
+        switch (role) {
+            case 'administrateur':
+            case 'ROLE_ADMIN':
+                return '/administrateur';
+            case 'formateur':
+            case 'ROLE_FORMATEUR':
+                return '/formateur';
+            case 'apprenant':
+            case 'ROLE_USER':
+                return '/apprenant';
+            default:
+                return '/profile';
+        }
     };
 
     return (
@@ -43,13 +63,19 @@ export default function Navbar() {
                     <div className="h-6 w-px bg-slate-200"></div>
 
                     <div className="flex items-center space-x-3">
-                        {isConnected ? (
+                        {isAuthenticated ? (
                             <>
-                                <Link href="/profile" className="flex items-center space-x-2 px-4 py-2 text-primary hover:text-[#1a365d] hover:bg-blue-50 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary">
+                                <Link href={getProfileLink()} className="flex items-center space-x-2 px-4 py-2 text-primary hover:text-[#1a365d] hover:bg-blue-50 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary">
                                     <User size={20} aria-hidden="true" />
-                                    <span className="font-medium">Compte</span>
+                                    <span className="font-medium">
+                                        {user?.prenom || 'Compte'}
+                                    </span>
                                 </Link>
-                                <button className="flex items-center space-x-2 px-4 py-2 text-red-600 border border-red-200 bg-red-50 rounded-xl hover:bg-red-100 hover:border-red-300 transition-all focus:outline-none focus:ring-2 focus:ring-red-500" aria-label="Se déconnecter">
+                                <button
+                                    onClick={logout}
+                                    className="flex items-center space-x-2 px-4 py-2 text-red-600 border border-red-200 bg-red-50 rounded-xl hover:bg-red-100 hover:border-red-300 transition-all focus:outline-none focus:ring-2 focus:ring-red-500"
+                                    aria-label="Se déconnecter"
+                                >
                                     <LogOut size={18} aria-hidden="true" />
                                     <span className="font-medium">Déconnexion</span>
                                 </button>
@@ -82,13 +108,16 @@ export default function Navbar() {
                         <Link href="/formations" className={`block px-3 py-3 rounded-xl text-base font-medium ${isActive('/formations') ? 'text-primary bg-blue-50 font-bold' : 'text-primary hover:text-[#1a365d] hover:bg-blue-50'}`}>Formations</Link>
                         <Link href="/categories" className={`block px-3 py-3 rounded-xl text-base font-medium ${isActive('/categories') ? 'text-primary bg-blue-50 font-bold' : 'text-primary hover:text-[#1a365d] hover:bg-blue-50'}`}>Catégories</Link>
                         <div className="border-t border-slate-100 my-2 pt-2">
-                            {isConnected ? (
+                            {isAuthenticated ? (
                                 <>
-                                    <Link href="/profile" className="flex items-center space-x-2 px-3 py-3 rounded-xl text-base font-medium text-primary hover:bg-blue-50">
+                                    <Link href={getProfileLink()} className="flex items-center space-x-2 px-3 py-3 rounded-xl text-base font-medium text-primary hover:bg-blue-50">
                                         <User size={20} />
-                                        <span>Mon Compte</span>
+                                        <span>Mon Compte ({user?.prenom})</span>
                                     </Link>
-                                    <button className="w-full flex items-center space-x-2 px-3 py-3 rounded-xl text-base font-medium text-red-600 hover:bg-red-50 text-left">
+                                    <button
+                                        onClick={logout}
+                                        className="w-full flex items-center space-x-2 px-3 py-3 rounded-xl text-base font-medium text-red-600 hover:bg-red-50 text-left"
+                                    >
                                         <LogOut size={20} />
                                         <span>Déconnexion</span>
                                     </button>

@@ -25,18 +25,7 @@ export default function LoginPage() {
         e.preventDefault();
         setError(null);
         try {
-            const data = await login(formData.email, formData.password);
-            const user = data?.user || data;
-
-            if (user?.type === 'administrateur' || user?.role === 'administrateur' || user?.roles?.includes('ROLE_ADMIN')) {
-                router.push('/administrateur');
-            } else if (user?.type === 'apprenant' || user?.role === 'apprenant' || user?.roles?.includes('ROLE_USER')) {
-                router.push('/apprenant');
-            } else if (user?.type === 'formateur' || user?.role === 'formateur' || user?.roles?.includes('ROLE_FORMATEUR')) {
-                router.push('/formateur');
-            } else {
-                router.push('/');
-            }
+            await login(formData.email, formData.password);
         } catch (err) {
             setError(err.message || 'Échec de la connexion. Vérifiez vos identifiants.');
         }
