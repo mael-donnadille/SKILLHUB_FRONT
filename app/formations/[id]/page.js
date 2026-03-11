@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { Calendar, User, Award, ArrowLeft, BookOpen, Code, Palette, Database, TrendingUp, Languages, Users, Target, Clock } from "lucide-react";
 import Link from "next/link";
 
-// Configuration précise pour chaque catégorie (cohérent avec CategoryCard et page catégorie)
 const CATEGORY_CONFIG = {
     "Développement Web": {
         icon: Code,
