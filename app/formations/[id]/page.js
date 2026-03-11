@@ -196,7 +196,7 @@ export default async function FormationDetailsPage({ params }) {
                                 <div className="space-y-3">
                                     <button className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-[#1a365d] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 transform flex items-center justify-center gap-2">
                                         <BookOpen size={20} />
-                                        S'inscrire maintenant
+                                        S&apos;inscrire maintenant
                                     </button>
                                     <p className="text-center text-xs text-slate-500 font-medium">
                                         Places limitées - Inscription sécurisée
