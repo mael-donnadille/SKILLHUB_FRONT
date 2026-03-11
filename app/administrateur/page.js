@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Users, BookOpen, Calendar, AlertCircle } from "lucide-react";
 import { MOCK_DATA } from "@/services/mockAdminService";
 
+import { getFormations } from "@/services/formationService";
+
 const StatCard = ({ title, value, icon: Icon, color, trend }) => (
     <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
         <div className="flex justify-between items-start mb-4">
@@ -24,6 +26,26 @@ const StatCard = ({ title, value, icon: Icon, color, trend }) => (
 export default function AdminDashboardPage() {
     const [stats, setStats] = useState(MOCK_DATA.stats);
     const [activities, setActivities] = useState(MOCK_DATA.recentActivity);
+
+    useEffect(() => {
+        const fetchRealStats = async () => {
+            try {
+                const formations = await getFormations();
+                const activeFormations = formations.filter(f => f.statut === 'VALIDE').length;
+                const pendingValidations = formations.filter(f => f.statut === 'EN_ATTENTE').length;
+
+                setStats(prev => ({
+                    ...prev,
+                    activeFormations,
+                    pendingValidations
+                }));
+            } catch (error) {
+                console.error("Error fetching formations for stats:", error);
+            }
+        };
+
+        fetchRealStats();
+    }, []);
 
     return (
         <div className="space-y-8">

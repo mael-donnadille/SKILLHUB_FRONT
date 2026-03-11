@@ -28,14 +28,17 @@ export const metadata = {
 };
 
 import ClientLayout from "@/components/ClientLayout";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export default function RootLayout({ children }) {
     return (
         <html lang="fr">
             <body className={`${poppins.variable} font-sans antialiased bg-background text-primary`}>
-                <ClientLayout>
-                    {children}
-                </ClientLayout>
+                <AuthProvider>
+                    <ClientLayout>
+                        {children}
+                    </ClientLayout>
+                </AuthProvider>
             </body>
         </html>
     );

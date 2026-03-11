@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { BookOpen, Calendar, Award, Clock, ArrowRight, CreditCard, CheckCircle } from "lucide-react";
 import { getLearnerProfile, getMyFormations, getLearnerWorkshops } from "@/services/mockLearnerService";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function LearnerDashboardPage() {
+    const { user } = useAuth();
     const [profile, setProfile] = useState(null);
     const [formations, setFormations] = useState([]);
     const [workshops, setWorkshops] = useState([]);
@@ -16,7 +18,8 @@ export default function LearnerDashboardPage() {
         getLearnerWorkshops().then(setWorkshops);
     }, []);
 
-    if (!profile) return <div className="flex justify-center items-center h-64">Chargement...</div>;
+    // Combine Auth user with mock subscription profile momentarily
+    if (!profile || !user) return <div className="flex justify-center items-center h-64">Chargement...</div>;
 
     const nextWorkshop = workshops[0];
 
@@ -32,16 +35,16 @@ export default function LearnerDashboardPage() {
             {/* Header */}
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-foreground tracking-tight">Bonjour, {profile.prenom} 👋</h1>
+                    <h1 className="text-3xl font-bold text-foreground tracking-tight">Bonjour, {user.prenom} 👋</h1>
                     <p className="text-muted-foreground mt-1">Prêt pour votre prochain atelier ?</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="text-right hidden sm:block">
-                        <p className="text-sm font-bold text-foreground">{profile.prenom} {profile.nom}</p>
-                        <p className="text-xs text-muted-foreground capitalize">{profile.role}</p>
+                        <p className="text-sm font-bold text-foreground">{user.prenom} {user.nom}</p>
+                        <p className="text-xs text-muted-foreground capitalize">{user.type || 'Apprenant'}</p>
                     </div>
                     <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg">
-                        {profile.avatar}
+                        {user.prenom?.charAt(0)}{user.nom?.charAt(0)}
                     </div>
                 </div>
             </div>

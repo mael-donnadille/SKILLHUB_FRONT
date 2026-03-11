@@ -1,4 +1,5 @@
 import AdminSidebar from "@/components/admin/Sidebar";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export const metadata = {
     title: "SkillHub - Administration",
@@ -7,14 +8,16 @@ export const metadata = {
 
 export default function AdminLayout({ children }) {
     return (
-        <div className="min-h-screen bg-slate-50 font-sans">
-            <AdminSidebar />
+        <ProtectedRoute allowedRoles={['administrateur', 'ROLE_ADMIN']}>
+            <div className="min-h-screen bg-slate-50 font-sans">
+                <AdminSidebar />
 
-            <main className="ml-64 min-h-screen">
-                <div className="p-8">
-                    {children}
-                </div>
-            </main>
-        </div>
+                <main className="ml-64 min-h-screen">
+                    <div className="p-8">
+                        {children}
+                    </div>
+                </main>
+            </div>
+        </ProtectedRoute>
     );
 }

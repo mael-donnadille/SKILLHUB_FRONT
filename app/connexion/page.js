@@ -1,11 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, User, Star, Shield, Zap } from "lucide-react";
 
 export default function LoginPage() {
+    const { login, loading } = useAuth();
+    const router = useRouter();
+    const [error, setError] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
@@ -16,10 +21,25 @@ export default function LoginPage() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Login attempt:", formData);
-        // Backend integration to come later
+        setError(null);
+        try {
+            const data = await login(formData.email, formData.password);
+            const user = data?.user || data;
+
+            if (user?.type === 'administrateur' || user?.role === 'administrateur' || user?.roles?.includes('ROLE_ADMIN')) {
+                router.push('/administrateur');
+            } else if (user?.type === 'apprenant' || user?.role === 'apprenant' || user?.roles?.includes('ROLE_USER')) {
+                router.push('/apprenant');
+            } else if (user?.type === 'formateur' || user?.role === 'formateur' || user?.roles?.includes('ROLE_FORMATEUR')) {
+                router.push('/formateur');
+            } else {
+                router.push('/');
+            }
+        } catch (err) {
+            setError(err.message || 'Échec de la connexion. Vérifiez vos identifiants.');
+        }
     };
 
     return (
@@ -52,7 +72,13 @@ export default function LoginPage() {
                             </p>
                         </div>
 
-                        <form className="mt-10 space-y-6" onSubmit={handleSubmit}>
+                        {error && (
+                            <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium">
+                                {error}
+                            </div>
+                        )}
+
+                        <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
                             <div className="space-y-5">
                                 <div>
                                     <label htmlFor="email" className="block text-sm font-semibold text-primary mb-2">
@@ -125,10 +151,11 @@ export default function LoginPage() {
 
                             <button
                                 type="submit"
-                                className="w-full flex justify-center items-center py-4 px-4 border border-transparent text-base font-bold rounded-xl text-white bg-primary hover:bg-[#1a365d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all shadow-lg hover:shadow-primary/30 transform hover:-translate-y-0.5"
+                                disabled={loading}
+                                className="w-full flex justify-center items-center py-4 px-4 border border-transparent text-base font-bold rounded-xl text-white bg-primary hover:bg-[#1a365d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all shadow-lg hover:shadow-primary/30 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Se connecter
-                                <ArrowRight className="ml-2 h-5 w-5" />
+                                {loading ? 'Connexion en cours...' : 'Se connecter'}
+                                {!loading && <ArrowRight className="ml-2 h-5 w-5" />}
                             </button>
                         </form>
 

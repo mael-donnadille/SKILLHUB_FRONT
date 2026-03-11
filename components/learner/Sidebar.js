@@ -17,8 +17,11 @@ const NAV_ITEMS = [
     { label: "Mes Certificats", href: "/apprenant/mes-certificats", icon: Award },
 ];
 
+import { useAuth } from "@/contexts/AuthContext";
+
 export default function LearnerSidebar() {
     const pathname = usePathname();
+    const { logout } = useAuth();
 
     return (
         <aside className="w-64 bg-white border-r border-slate-200 h-screen fixed left-0 top-0 flex flex-col z-50">
@@ -44,8 +47,8 @@ export default function LearnerSidebar() {
                             key={item.href}
                             href={item.href}
                             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                                    ? "bg-primary text-white shadow-md shadow-primary/20"
-                                    : "text-muted-foreground hover:bg-slate-50 hover:text-foreground"
+                                ? "bg-primary text-white shadow-md shadow-primary/20"
+                                : "text-muted-foreground hover:bg-slate-50 hover:text-foreground"
                                 }`}
                         >
                             <Icon size={20} className={isActive ? "text-white" : "text-muted-foreground group-hover:text-primary"} />
@@ -56,7 +59,10 @@ export default function LearnerSidebar() {
             </nav>
 
             <div className="p-4 border-t border-slate-100">
-                <button className="flex items-center gap-3 w-full px-3 py-2.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                <button
+                    onClick={logout}
+                    className="flex items-center gap-3 w-full px-3 py-2.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                >
                     <LogOut size={20} />
                     <span className="font-medium">Déconnexion</span>
                 </button>

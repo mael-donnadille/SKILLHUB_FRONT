@@ -9,12 +9,15 @@ export default function ClientLayout({ children }) {
     const isAuthPage = pathname === "/connexion" || pathname === "/inscription";
     const isAdminPage = pathname?.startsWith("/administrateur");
     const isLearnerPage = pathname?.startsWith("/apprenant");
+    const isFormateurPage = pathname?.startsWith("/formateur");
+
+    const hideNavigation = isAuthPage || isAdminPage || isLearnerPage || isFormateurPage;
 
     return (
         <>
-            {!isAuthPage && !isAdminPage && !isLearnerPage && <Navbar />}
+            {!hideNavigation && <Navbar />}
             {children}
-            {!isAuthPage && !isAdminPage && !isLearnerPage && <Footer />}
+            {!hideNavigation && <Footer />}
         </>
     );
 }
