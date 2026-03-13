@@ -2,26 +2,27 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { login as apiLogin, getCurrentUser } from '@/services/authService';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 const AuthContext = createContext();
 
 const getRedirectPath = (user) => {
     if (!user) return '/';
-    const role = user.type || user.role || (user.roles && user.roles[0]);
-    switch (role) {
-        case 'administrateur':
-        case 'ROLE_ADMIN':
-            return '/administrateur';
-        case 'formateur':
-        case 'ROLE_FORMATEUR':
-            return '/formateur';
-        case 'apprenant':
-        case 'ROLE_USER':
-            return '/apprenant';
-        default:
-            return '/';
+    // Gestion flexible des rôles (tableau ou string)
+    const roles = user.roles || (user.role ? [user.role] : []);
+    const type = user.type;
+
+    if (roles.includes('ROLE_ADMIN') || type === 'administrateur') {
+        return '/administrateur';
     }
+    if (roles.includes('ROLE_FORMATEUR') || type === 'formateur') {
+        return '/formateur';
+    }
+    if (roles.includes('ROLE_USER') || type === 'apprenant') {
+        return '/apprenant';
+    }
+    
+    return '/';
 };
 
 export const AuthProvider = ({ children }) => {
@@ -29,6 +30,7 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+    const pathname = usePathname();
 
     useEffect(() => {
         const initAuth = async () => {
@@ -38,6 +40,12 @@ export const AuthProvider = ({ children }) => {
                     const userData = await getCurrentUser(storedToken);
                     setToken(storedToken);
                     setUser(userData);
+                    
+                    // Si l'utilisateur est sur la page de connexion alors qu'il est déjà identifié, on le redirige
+                    if (pathname === '/connexion') {
+                         const redirectPath = getRedirectPath(userData);
+                         router.push(redirectPath);
+                    }
                 } catch (error) {
                     console.error("Failed to authenticate with stored token", error);
                     localStorage.removeItem('token');
@@ -49,19 +57,26 @@ export const AuthProvider = ({ children }) => {
         };
 
         initAuth();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const login = async (email, password) => {
         try {
             setLoading(true);
             const data = await apiLogin(email, password);
-            const token = data.token;
-            localStorage.setItem('token', token);
-            setToken(token);
+            const newToken = data.token;
+            
+            if (!newToken) {
+                throw new Error('Token not found in response');
+            }
+
+            localStorage.setItem('token', newToken);
+            setToken(newToken);
 
             let userData = data.user;
+            // Si l'API de login ne renvoie pas l'utilisateur complet, on le récupère
             if (!userData) {
-                userData = await getCurrentUser(token);
+                userData = await getCurrentUser(newToken);
             }
             setUser(userData);
 
