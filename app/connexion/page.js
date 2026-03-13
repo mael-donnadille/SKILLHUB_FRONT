@@ -25,18 +25,7 @@ export default function LoginPage() {
         e.preventDefault();
         setError(null);
         try {
-            const data = await login(formData.email, formData.password);
-            const user = data?.user || data;
-
-            if (user?.type === 'administrateur' || user?.role === 'administrateur' || user?.roles?.includes('ROLE_ADMIN')) {
-                router.push('/administrateur');
-            } else if (user?.type === 'apprenant' || user?.role === 'apprenant' || user?.roles?.includes('ROLE_USER')) {
-                router.push('/apprenant');
-            } else if (user?.type === 'formateur' || user?.role === 'formateur' || user?.roles?.includes('ROLE_FORMATEUR')) {
-                router.push('/formateur');
-            } else {
-                router.push('/');
-            }
+            await login(formData.email, formData.password);
         } catch (err) {
             setError(err.message || 'Échec de la connexion. Vérifiez vos identifiants.');
         }
@@ -50,7 +39,7 @@ export default function LoginPage() {
                     <div className="absolute top-8 left-8">
                         <Link href="/" className="inline-flex items-center text-slate-500 hover:text-primary font-medium transition-colors">
                             <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
-                            Retour à l'accueil
+                            Retour à l&apos;accueil
                         </Link>
                     </div>
 
@@ -178,13 +167,13 @@ export default function LoginPage() {
                     <div className="relative z-10 max-w-lg text-white">
                         <div className="mb-8 inline-flex items-center px-4 py-2 rounded-full bg-accent/20 border border-accent/30 text-accent font-medium text-sm">
                             <Star className="w-4 h-4 mr-2" fill="currentColor" />
-                            Accédez à l'excellence
+                            Accédez à l&apos;excellence
                         </div>
                         <h1 className="text-5xl font-extrabold mb-6 leading-tight">
                             Continuez votre progression
                         </h1>
                         <p className="text-xl text-slate-300 mb-10 leading-relaxed">
-                            Retrouvez vos formations, vos certificats et rejoignez votre communauté d'apprentissage.
+                            Retrouvez vos formations, vos certificats et rejoignez votre communauté d&apos;apprentissage.
                         </p>
 
                         <div className="grid grid-cols-2 gap-6">

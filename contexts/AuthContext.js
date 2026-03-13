@@ -6,6 +6,24 @@ import { useRouter } from 'next/navigation';
 
 const AuthContext = createContext();
 
+const getRedirectPath = (user) => {
+    if (!user) return '/';
+    const role = user.type || user.role || (user.roles && user.roles[0]);
+    switch (role) {
+        case 'administrateur':
+        case 'ROLE_ADMIN':
+            return '/administrateur';
+        case 'formateur':
+        case 'ROLE_FORMATEUR':
+            return '/formateur';
+        case 'apprenant':
+        case 'ROLE_USER':
+            return '/apprenant';
+        default:
+            return '/';
+    }
+};
+
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
@@ -13,18 +31,18 @@ export const AuthProvider = ({ children }) => {
     const router = useRouter();
 
     useEffect(() => {
-        // Run once on mount to check if token exists in localStorage
         const initAuth = async () => {
             const storedToken = localStorage.getItem('token');
             if (storedToken) {
                 try {
-                    // Try to fetch user with stored token
                     const userData = await getCurrentUser(storedToken);
                     setToken(storedToken);
                     setUser(userData);
                 } catch (error) {
                     console.error("Failed to authenticate with stored token", error);
-                    logout(); // clean up if invalid
+                    localStorage.removeItem('token');
+                    setToken(null);
+                    setUser(null);
                 }
             }
             setLoading(false);
@@ -46,6 +64,10 @@ export const AuthProvider = ({ children }) => {
                 userData = await getCurrentUser(token);
             }
             setUser(userData);
+
+            const redirectPath = getRedirectPath(userData);
+            router.push(redirectPath);
+
             return data;
         } catch (error) {
             console.error('Login error in AuthContext', error);

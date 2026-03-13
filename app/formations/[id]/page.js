@@ -1,10 +1,9 @@
-import { getFormation } from "@/services/formationService";
+import { getFormation, getFormations } from "@/services/formationService";
 import BackButton from "@/components/ui/BackButton";
 import { notFound } from "next/navigation";
 import { Calendar, User, Award, ArrowLeft, BookOpen, Code, Palette, Database, TrendingUp, Languages, Users, Target, Clock } from "lucide-react";
 import Link from "next/link";
 
-// Configuration précise pour chaque catégorie (cohérent avec CategoryCard et page catégorie)
 const CATEGORY_CONFIG = {
     "Développement Web": {
         icon: Code,
@@ -36,9 +35,22 @@ const CATEGORY_CONFIG = {
     }
 };
 
+async function getFormationFromList(id) {
+    const formations = await getFormations();
+    // The ID from the URL is a string, so we use '==' for loose comparison
+    // to handle potential type differences (e.g., '12' vs 12).
+    return formations.find(f => f.id == id);
+}
+
 export default async function FormationDetailsPage({ params }) {
-    const { id } = await params;
-    const formation = await getFormation(id);
+    const { id } = await params; // Await is required here
+    let formation = await getFormation(id);
+
+    // Fallback to fetching the list if the single fetch fails or returns null
+    if (!formation) {
+        console.log(`getFormation(${id}) failed or returned null, falling back to getFormations() list.`);
+        formation = await getFormationFromList(id);
+    }
 
     if (!formation) {
         notFound();
@@ -183,7 +195,7 @@ export default async function FormationDetailsPage({ params }) {
                                 <div className="space-y-3">
                                     <button className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-[#1a365d] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 transform flex items-center justify-center gap-2">
                                         <BookOpen size={20} />
-                                        S'inscrire maintenant
+                                        S&apos;inscrire maintenant
                                     </button>
                                     <p className="text-center text-xs text-slate-500 font-medium">
                                         Places limitées - Inscription sécurisée
