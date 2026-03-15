@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, Filter, MoreVertical, Trash2, Edit, ChevronLeft, ChevronRight } from "lucide-react";
-import { getUsers } from "@/services/userService";
+import { Search, Filter, Trash2, Edit, ChevronLeft, ChevronRight, X, Plus } from "lucide-react";
+import { getUsers, updateUser, createUser, deleteUser } from "@/services/userService";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function UsersPage() {
@@ -16,18 +16,35 @@ export default function UsersPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // États pour la modale d'édition/création
+    const [editingUser, setEditingUser] = useState(null);
+    const [isCreatingUser, setIsCreatingUser] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+
+    // État pour le nouvel utilisateur
+    const [newUser, setNewUser] = useState({
+        prenom: '',
+        nom: '',
+        email: '',
+        password: '',
+        roleForForm: 'apprenant'
+    });
+
+    const fetchAllUsers = async () => {
+        try {
+            const data = await getUsers(token);
+            setUsers(data);
+            setIsLoading(false);
+        } catch (err) {
+            console.error(err);
+            setError("Impossible de charger les utilisateurs.");
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
         if (token) {
-            getUsers(token)
-                .then(data => {
-                    setUsers(data);
-                    setIsLoading(false);
-                })
-                .catch(err => {
-                    console.error(err);
-                    setError("Impossible de charger les utilisateurs.");
-                    setIsLoading(false);
-                });
+            fetchAllUsers();
         }
     }, [token]);
 
@@ -44,7 +61,99 @@ export default function UsersPage() {
             if (user.roles.includes('ROLE_FORMATEUR')) return 'formateur';
             return 'apprenant';
         }
-        return 'inconnu';
+        return 'apprenant';
+    };
+
+    const handleEditClick = (user) => {
+        setEditingUser({
+            ...user,
+            roleForForm: normalizeRole(user)
+        });
+    };
+
+    const handleCreateClick = () => {
+        setNewUser({
+            prenom: '',
+            nom: '',
+            email: '',
+            password: '',
+            roleForForm: 'apprenant'
+        });
+        setIsCreatingUser(true);
+    };
+
+    const handleDeleteClick = async (userId, prenom, nom) => {
+        if (confirm(`Êtes-vous sûr de vouloir supprimer l'utilisateur ${prenom} ${nom} ? Cette action est irréversible.`)) {
+            try {
+                await deleteUser(userId, token);
+                // Mettre à jour la liste locale en filtrant l'utilisateur supprimé
+                setUsers(users.filter(u => u.id !== userId));
+            } catch (error) {
+                alert("Erreur lors de la suppression : " + error.message);
+            }
+        }
+    };
+
+    const handleSaveEdit = async (e) => {
+        e.preventDefault();
+        setIsSaving(true);
+        try {
+            let roles = [];
+            switch(editingUser.roleForForm) {
+                case 'administrateur': roles = ['ROLE_ADMIN']; break;
+                case 'formateur': roles = ['ROLE_FORMATEUR']; break;
+                default: roles = ['ROLE_USER']; break;
+            }
+
+            const dataToUpdate = {
+                prenom: editingUser.prenom,
+                nom: editingUser.nom,
+                email: editingUser.email,
+                roles: roles
+            };
+
+            await updateUser(editingUser.id, dataToUpdate, token);
+            
+            setUsers(users.map(u => u.id === editingUser.id ? { ...u, ...dataToUpdate } : u));
+            setEditingUser(null);
+        } catch (error) {
+            alert("Erreur lors de la modification : " + error.message);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleSaveCreate = async (e) => {
+        e.preventDefault();
+        setIsSaving(true);
+        try {
+            let roles = [];
+            switch(newUser.roleForForm) {
+                case 'administrateur': roles = ['ROLE_ADMIN']; break;
+                case 'formateur': roles = ['ROLE_FORMATEUR']; break;
+                default: roles = ['ROLE_USER']; break;
+            }
+
+            const dataToCreate = {
+                prenom: newUser.prenom,
+                nom: newUser.nom,
+                email: newUser.email,
+                mot_de_passe: newUser.password, 
+                roles: roles,
+                type: newUser.roleForForm
+            };
+
+            await createUser(dataToCreate, token);
+            
+            // On recharge la liste complète pour s'assurer d'avoir les vrais IDs et la bonne pagination
+            await fetchAllUsers();
+            
+            setIsCreatingUser(false);
+        } catch (error) {
+            alert("Erreur lors de la création : " + error.message);
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const filteredUsers = users.filter(user => {
@@ -61,7 +170,6 @@ export default function UsersPage() {
         return nameA.localeCompare(nameB);
     });
 
-    // Pagination Logic
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
@@ -71,13 +179,10 @@ export default function UsersPage() {
         const role = normalizeRole(user);
         switch (role) {
             case 'administrateur': 
-            case 'ROLE_ADMIN':
                 return <span className="px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">Admin</span>;
             case 'formateur': 
-            case 'ROLE_FORMATEUR':
                 return <span className="px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">Formateur</span>;
             case 'apprenant': 
-            case 'ROLE_USER':
                 return <span className="px-2 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">Apprenant</span>;
             default: 
                 return <span className="px-2 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">{role}</span>;
@@ -88,11 +193,15 @@ export default function UsersPage() {
     if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 relative">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-foreground">Gestion des Utilisateurs</h1>
-                <button className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors shadow-sm">
-                    + Nouvel Utilisateur
+                <h1 className="text-2xl font-bold text-slate-800">Gestion des Utilisateurs</h1>
+                <button 
+                    onClick={handleCreateClick}
+                    className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2"
+                >
+                    <Plus size={18} />
+                    Nouvel Utilisateur
                 </button>
             </div>
 
@@ -140,13 +249,13 @@ export default function UsersPage() {
                         <tbody className="divide-y divide-slate-100">
                             {currentUsers.map((user, index) => (
                                 <tr 
-                                    key={user.id} 
+                                    key={user.id || `temp-${index}`}
                                     className={`transition-colors group ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'} hover:bg-slate-100`}
                                 >
                                     <td className="px-6 py-4 text-slate-500 font-medium">
                                         {indexOfFirstItem + index + 1}
                                     </td>
-                                    <td className="px-6 py-4 font-medium text-foreground">
+                                    <td className="px-6 py-4 font-medium text-slate-800">
                                         <div className="flex items-center gap-3">
                                             <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 text-xs font-bold uppercase">
                                                 {(user.prenom && user.prenom[0]) || ''}{(user.nom && user.nom[0]) || ''}
@@ -154,17 +263,25 @@ export default function UsersPage() {
                                             {user.prenom} {user.nom}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-muted-foreground">{user.email}</td>
+                                    <td className="px-6 py-4 text-slate-500">{user.email}</td>
                                     <td className="px-6 py-4">{getRoleBadge(user)}</td>
-                                    <td className="px-6 py-4 text-muted-foreground">
+                                    <td className="px-6 py-4 text-slate-500">
                                         {user.date_creation ? new Date(user.date_creation).toLocaleDateString() : '-'}
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button className="p-2 hover:bg-orange-50 text-orange-600 rounded-lg transition-colors" title="Modifier">
+                                            <button 
+                                                onClick={() => handleEditClick(user)}
+                                                className="p-2 hover:bg-orange-50 text-orange-600 rounded-lg transition-colors" 
+                                                title="Modifier"
+                                            >
                                                 <Edit size={16} />
                                             </button>
-                                            <button className="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors" title="Supprimer">
+                                            <button 
+                                                onClick={() => handleDeleteClick(user.id, user.prenom, user.nom)}
+                                                className="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors" 
+                                                title="Supprimer"
+                                            >
                                                 <Trash2 size={16} />
                                             </button>
                                         </div>
@@ -204,11 +321,184 @@ export default function UsersPage() {
                 )}
 
                 {filteredUsers.length === 0 && (
-                    <div className="p-8 text-center text-muted-foreground">
+                    <div className="p-8 text-center text-slate-400">
                         Aucun utilisateur trouvé pour ces critères.
                     </div>
                 )}
             </div>
+
+            {/* Modal d'édition */}
+            {editingUser && (
+                <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all">
+                        <div className="flex justify-between items-center p-6 border-b border-slate-100 bg-slate-50/50">
+                            <h2 className="text-xl font-bold text-slate-800">Modifier l&apos;utilisateur</h2>
+                            <button onClick={() => setEditingUser(null)} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <form onSubmit={handleSaveEdit} className="p-6 space-y-5">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Prénom</label>
+                                    <input 
+                                        type="text" 
+                                        required
+                                        value={editingUser.prenom || ''} 
+                                        onChange={e => setEditingUser({...editingUser, prenom: e.target.value})}
+                                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Nom</label>
+                                    <input 
+                                        type="text" 
+                                        required
+                                        value={editingUser.nom || ''} 
+                                        onChange={e => setEditingUser({...editingUser, nom: e.target.value})}
+                                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email</label>
+                                <input 
+                                    type="email" 
+                                    required
+                                    value={editingUser.email || ''} 
+                                    onChange={e => setEditingUser({...editingUser, email: e.target.value})}
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Rôle</label>
+                                <select 
+                                    value={editingUser.roleForForm}
+                                    onChange={e => setEditingUser({...editingUser, roleForForm: e.target.value})}
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white"
+                                >
+                                    <option value="apprenant">Apprenant</option>
+                                    <option value="formateur">Formateur</option>
+                                    <option value="administrateur">Administrateur</option>
+                                </select>
+                            </div>
+                            
+                            <div className="pt-4 mt-2 border-t border-slate-100 flex justify-end gap-3">
+                                <button 
+                                    type="button" 
+                                    onClick={() => setEditingUser(null)}
+                                    className="px-4 py-2 text-slate-600 font-medium hover:bg-slate-100 rounded-lg transition-colors"
+                                >
+                                    Annuler
+                                </button>
+                                <button 
+                                    type="submit" 
+                                    disabled={isSaving}
+                                    className="px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-70 flex items-center justify-center min-w-[120px]"
+                                >
+                                    {isSaving ? (
+                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    ) : "Enregistrer"}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de Création */}
+            {isCreatingUser && (
+                <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all">
+                        <div className="flex justify-between items-center p-6 border-b border-slate-100 bg-slate-50/50">
+                            <h2 className="text-xl font-bold text-slate-800">Nouvel utilisateur</h2>
+                            <button onClick={() => setIsCreatingUser(false)} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <form onSubmit={handleSaveCreate} className="p-6 space-y-5">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Prénom</label>
+                                    <input 
+                                        type="text" 
+                                        required
+                                        value={newUser.prenom} 
+                                        onChange={e => setNewUser({...newUser, prenom: e.target.value})}
+                                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Nom</label>
+                                    <input 
+                                        type="text" 
+                                        required
+                                        value={newUser.nom} 
+                                        onChange={e => setNewUser({...newUser, nom: e.target.value})}
+                                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email</label>
+                                <input 
+                                    type="email" 
+                                    required
+                                    value={newUser.email} 
+                                    onChange={e => setNewUser({...newUser, email: e.target.value})}
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Mot de passe</label>
+                                <input 
+                                    type="password" 
+                                    required
+                                    value={newUser.password} 
+                                    onChange={e => setNewUser({...newUser, password: e.target.value})}
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Rôle</label>
+                                <select 
+                                    value={newUser.roleForForm}
+                                    onChange={e => setNewUser({...newUser, roleForForm: e.target.value})}
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white"
+                                >
+                                    <option value="apprenant">Apprenant</option>
+                                    <option value="formateur">Formateur</option>
+                                    <option value="administrateur">Administrateur</option>
+                                </select>
+                            </div>
+                            
+                            <div className="pt-4 mt-2 border-t border-slate-100 flex justify-end gap-3">
+                                <button 
+                                    type="button" 
+                                    onClick={() => setIsCreatingUser(false)}
+                                    className="px-4 py-2 text-slate-600 font-medium hover:bg-slate-100 rounded-lg transition-colors"
+                                >
+                                    Annuler
+                                </button>
+                                <button 
+                                    type="submit" 
+                                    disabled={isSaving}
+                                    className="px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-70 flex items-center justify-center min-w-[120px]"
+                                >
+                                    {isSaving ? (
+                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    ) : "Créer"}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

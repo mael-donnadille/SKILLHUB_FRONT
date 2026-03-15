@@ -67,6 +67,7 @@ export const AuthProvider = ({ children }) => {
             const newToken = data.token;
             
             if (!newToken) {
+
                 throw new Error('Token not found in response');
             }
 
