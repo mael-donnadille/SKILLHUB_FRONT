@@ -2,7 +2,8 @@ import config from '@/utils/config';
 
 export const login = async (email, password) => {
     try {
-        const response = await fetch(`${config.API_URL}/auth/login`, {
+        // La nouvelle route pour créer une session (login)
+        const response = await fetch(`${config.API_URL}/sessions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -25,7 +26,8 @@ export const login = async (email, password) => {
 
 export const getCurrentUser = async (token) => {
     try {
-        const response = await fetch(`${config.API_URL}/auth/me`, {
+        // La nouvelle route pour récupérer l'utilisateur courant
+        const response = await fetch(`${config.API_URL}/sessions/current`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,

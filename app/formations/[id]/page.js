@@ -1,4 +1,5 @@
 import { getFormation, getFormations } from "@/services/formationService";
+import { getAteliers } from "@/services/atelierService";
 import BackButton from "@/components/ui/BackButton";
 import { notFound } from "next/navigation";
 import { Calendar, User, Award, ArrowLeft, BookOpen, Code, Palette, Database, TrendingUp, Languages, Users, Target, Clock } from "lucide-react";
@@ -56,10 +57,53 @@ export default async function FormationDetailsPage({ params }) {
         notFound();
     }
 
+    // Récupération des ateliers
+    let ateliers = [];
+    try {
+        const allAteliersData = await getAteliers(); // Essai sans token
+        const normalizedAteliers = Array.isArray(allAteliersData) ? allAteliersData : (allAteliersData['hydra:member'] || allAteliersData.data || []);
+        
+        ateliers = normalizedAteliers.filter(a => {
+            if (!a.formation) return false;
+            const aFormId = typeof a.formation === 'object' ? a.formation.id : String(a.formation).split('/').pop();
+            // eslint-disable-next-line eqeqeq
+            return aFormId == id;
+        });
+
+        // Tri par date (avec la clé date_atelier de la nouvelle structure)
+        ateliers.sort((a, b) => new Date(a.date_atelier) - new Date(b.date_atelier));
+    } catch (e) {
+        console.error("Impossible de récupérer les ateliers pour la page publique :", e);
+    }
+
     const formatDate = (dateString) => {
         if (!dateString) return "";
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString('fr-FR', options);
+    };
+
+    const formatDateTime = (dateString, heureDebut, heureFin) => {
+        if (!dateString) return "Date à définir";
+        const optionsDate = { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' };
+        const datePart = new Date(dateString).toLocaleDateString('fr-FR', optionsDate);
+        
+        let timePart = "";
+        if (heureDebut) {
+            const formatTime = (timeStr) => {
+                if (!timeStr) return "";
+                if (timeStr.includes('T')) {
+                    return new Date(timeStr).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                }
+                return timeStr.substring(0, 5);
+            };
+            
+            timePart = ` de ${formatTime(heureDebut)}`;
+            if (heureFin) {
+                timePart += ` à ${formatTime(heureFin)}`;
+            }
+        }
+        
+        return `${datePart.charAt(0).toUpperCase() + datePart.slice(1)}${timePart}`;
     };
 
     // Récupérer la configuration de la catégorie
@@ -117,7 +161,9 @@ export default async function FormationDetailsPage({ params }) {
                             <div className="flex flex-wrap gap-6 text-white/90 text-sm md:text-base mb-6 justify-center md:justify-start">
                                 <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
                                     <Calendar size={20} />
-                                    <span className="font-medium">{formatDate(formation.dateProposition)}</span>
+                                    <span className="font-medium">
+                                        {ateliers.length > 0 ? `${ateliers.length} session(s) disponible(s)` : "Aucune session planifiée"}
+                                    </span>
                                 </div>
                                 <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
                                     <User size={20} />
@@ -165,13 +211,6 @@ export default async function FormationDetailsPage({ params }) {
                                 <h3 className="text-2xl font-bold text-primary mb-6">Détails pratiques</h3>
 
                                 <div className="space-y-4 mb-8">
-                                    <div className="flex items-center justify-between py-3 border-b border-slate-100">
-                                        <span className="text-slate-600 flex items-center gap-2 font-medium">
-                                            <Calendar size={18} className="text-primary" />
-                                            Date
-                                        </span>
-                                        <span className="font-bold text-primary">{formatDate(formation.dateProposition)}</span>
-                                    </div>
                                     {formation.annee?.libelle && (
                                         <div className="flex items-center justify-between py-3 border-b border-slate-100">
                                             <span className="text-slate-600 flex items-center gap-2 font-medium">
@@ -181,7 +220,7 @@ export default async function FormationDetailsPage({ params }) {
                                             <span className="font-bold text-primary">{formation.annee.libelle}</span>
                                         </div>
                                     )}
-                                    <div className="flex items-center justify-between py-3">
+                                    <div className="flex items-center justify-between py-3 border-b border-slate-100">
                                         <span className="text-slate-600 flex items-center gap-2 font-medium">
                                             <User size={18} className="text-primary" />
                                             Formateur
@@ -189,6 +228,38 @@ export default async function FormationDetailsPage({ params }) {
                                         <span className="font-bold text-primary text-right">
                                             {formation.formateur ? `${formation.formateur.prenom} ${formation.formateur.nom}` : 'Expert'}
                                         </span>
+                                    </div>
+                                    
+                                    {/* Section Ateliers (Sessions) */}
+                                    <div className="pt-2">
+                                        <span className="text-slate-600 flex items-center gap-2 font-medium mb-3">
+                                            <Calendar size={18} className="text-primary" />
+                                            Sessions planifiées
+                                        </span>
+                                        
+                                        {ateliers.length > 0 ? (
+                                            <div className="space-y-3">
+                                                {ateliers.map((atelier, index) => (
+                                                    <div key={atelier.id || index} className="bg-slate-50 p-3 rounded-lg border border-slate-100 text-sm">
+                                                        <div className="flex items-start gap-3">
+                                                            <Clock size={16} className="text-slate-400 mt-0.5 shrink-0" />
+                                                            <div>
+                                                                <p className="font-semibold text-slate-800 capitalize">
+                                                                    {formatDateTime(atelier.date_atelier, atelier.heure_debut, atelier.heure_fin)}
+                                                                </p>
+                                                                {atelier.salle?.nom && (
+                                                                    <p className="text-slate-500 mt-1">{atelier.salle.nom}</p>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <p className="text-sm text-slate-500 italic bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                                Aucune session n&apos;est encore planifiée pour cette formation.
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
 
