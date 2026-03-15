@@ -11,7 +11,8 @@ import {
     Settings,
     LogOut,
     Shield,
-    Layers
+    Layers,
+    Clock
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -23,9 +24,8 @@ export function AdminSidebar() {
         { href: "/administrateur", icon: LayoutDashboard, label: "Vue d'ensemble" },
         { href: "/administrateur/utilisateurs", icon: Users, label: "Utilisateurs" },
         { href: "/administrateur/formations", icon: BookOpen, label: "Formations" },
+        { href: "/administrateur/ateliers", icon: Clock, label: "Ateliers" },
         { href: "/administrateur/categories", icon: Layers, label: "Catégories" },
-        { href: "/administrateur/planning", icon: Calendar, label: "Planning" },
-        { href: "/administrateur/parametres", icon: Settings, label: "Paramètres" },
     ];
 
     return (

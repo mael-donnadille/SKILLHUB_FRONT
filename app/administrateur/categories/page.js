@@ -65,7 +65,6 @@ export default function CategoriesPage() {
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800">Gestion des Catégories</h1>
-                    <p className="text-sm text-slate-500">Ajoutez, modifiez ou supprimez les thématiques de formation.</p>
                 </div>
                 <button className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2">
                     <Plus size={18} />
